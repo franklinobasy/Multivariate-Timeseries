@@ -753,16 +753,16 @@ def forward_model(model, generated_data_scaled):
             X_generated[i - lag] = generated_data_scaled[i - lag:i].flatten()
 
         if model == "VAR":
-            results = MODELS_DICT['VAR'][lag - 1]
+            results = MODELS_DICT['VAR']['models'][lag - 1]
             lagged_endog_generated = np.concatenate((X_generated[-lag:], np.zeros((lag, 1))), axis=1)
             y_pred_generated = results.forecast(y=lagged_endog_generated, steps=len(X_generated))[:, -1]
         elif model == "LSTM":
             X_generated_seq = X_generated.reshape(X_generated.shape[0], lag, generated_data_scaled.shape[1])
-            model_lstm = MODELS_DICT['LSTM'][lag - 1]
+            model_lstm = MODELS_DICT['LSTM']['models'][lag - 1]
             y_pred_generated = model_lstm.predict(X_generated_seq)
         elif model == "RNN":
             X_generated_seq = X_generated.reshape(X_generated.shape[0], lag, generated_data_scaled.shape[1])
-            model_rnn = MODELS_DICT['RNN'][lag - 1]
+            model_rnn = MODELS_DICT['RNN']['models'][lag - 1]
             y_pred_generated = model_rnn.predict(X_generated_seq)
 
         predictions[str(lag)] = y_pred_generated
@@ -879,5 +879,8 @@ forward_model("VAR", scenerio3_X_scaled)
 # %%
 # project VAR on constant emission
 forward_model("RNN", scenerio3_X_scaled)
+
+# %%
+
 
 
